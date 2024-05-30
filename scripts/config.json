@@ -1,0 +1,5 @@
+{
+  "NETWORK_DIR_PATH": "/home/adrian/sentinel-on-chain-private/preprod",
+  "CARDANO_NODE_SOCKET_PATH": "/home/adrian/cardano/preprod/db/node.socket",
+  "TESTNET_MAGIC": 1
+}
