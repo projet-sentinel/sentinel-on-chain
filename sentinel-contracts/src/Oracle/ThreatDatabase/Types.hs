@@ -106,7 +106,7 @@ PlutusTx.makeIsDataIndexed ''ThreatDatabaseSHListDatum    [ ( 'ThreatDatabaseSHL
 --
 -- Constructors:
 --
--- * 'UpdateThreatData' - Add a threat data threat data address to the threat database.
+-- * 'UpdateThreatData' - Add a threat data address to the threat database.
 -- * 'RemoveThreatData' - Remove a threat data address from the threat database.
 -- * 'ThreatDatabaseDebugger' - The threat database debugger action on the threat database.
 --

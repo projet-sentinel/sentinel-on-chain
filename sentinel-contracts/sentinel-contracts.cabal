@@ -90,6 +90,9 @@ Library
                           Oracle.TDAT.AddressList.Policy
                           Oracle.TDAT.ScriptHashList.Policy
 
+                          Oracle.TDR.Types
+                          Oracle.TDR.Validator
+
                           --Users
                           Users.Escrow.Types
                           Users.Escrow.Validator
