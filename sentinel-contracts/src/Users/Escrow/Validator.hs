@@ -112,7 +112,7 @@ mkValidator EscrowParams{..} datum _ ctx@ScriptContext{ scriptContextTxInfo = Tx
                 |   otherwise = traceError "Escrow 2"
                     where
                         getAllInputsTxOuts :: [TxInInfo] -> [TxOut]
-                        getAllInputsTxOuts inputs = map txInInfoResolved inputs
+                        getAllInputsTxOuts = map txInInfoResolved
 
                         isCurrencySymbolExist :: TxOut -> Bool
                         isCurrencySymbolExist tx = any (== currencySymbolOfTDAT) (symbols (txOutValue tx))

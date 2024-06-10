@@ -8,7 +8,6 @@ import           Data.Aeson                 (ToJSON)
 import           GHC.Generics               (Generic)
 import           Ledger.Orphans             ()
 import           PlutusLedgerApi.V1.Address (Address)
-import           PlutusLedgerApi.V1.Crypto  (PubKeyHash)
 import           PlutusLedgerApi.V1.Value   (CurrencySymbol)
 import qualified PlutusTx
 import           PlutusTx.Prelude           (Bool (..), Eq, (&&), (==))

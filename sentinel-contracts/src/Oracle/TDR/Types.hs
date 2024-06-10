@@ -76,21 +76,18 @@ PlutusTx.makeIsDataIndexed ''TDRDatum   [( 'TDRDatum,  1 )]
 --
 -- * 'AcceptRequest' - Accept request and add a threat data to the threat database.
 -- * 'RemoveRequest' - Remove request from the threat detection and response (TDR).
--- * 'GarbageCollection' - Remove UTxO from the threat detection and response (TDR).
 -- * 'TDRDebugger' - The threat detection and response (TDR) debugger action on the threat database.
 --
 -- Note: This data type defines the actions for manipulating the threat detection and response (TDR).
 data TDRAction
     =   AcceptRequest
     |   RemoveRequest
-    |   GarbageCollection
     |   TDRDebugger
     deriving (Haskell.Show, Generic, ToJSON)
 
 PlutusTx.makeIsDataIndexed ''TDRAction  [ ( 'AcceptRequest,     1 )
                                         , ( 'RemoveRequest,     2 )
-                                        , ( 'GarbageCollection, 3 )
-                                        , ( 'TDRDebugger,       4 )
+                                        , ( 'TDRDebugger,       3 )
                                         ]
 
 -- | Datum for the reference script in the threat detection and response (TDR).
@@ -98,17 +95,17 @@ PlutusTx.makeIsDataIndexed ''TDRAction  [ ( 'AcceptRequest,     1 )
 -- Fields:
 --
 -- * 'tDRIndex' - A unique identifier for the threat detection and response (TDR).
--- * 'treasuryAddress' - The address which get paid the threat data UTxO.
 -- * 'databaseIndex' - A unique identifier for the threat database.
 -- * 'threatDatabaseSH' - The script hash of threat database contract which threat data will be added to.
+-- * 'requestPeriod' - The time period in POSIX time (milliseconds) for the request.
 --
 -- Note: This data type derives several common type classes for convenience.
 data TDRRefScriptDatum
     =   TDRRefScriptDatum
             {   tDRIndex         :: BuiltinByteString
-            ,   treasuryAddress  :: Address
             ,   databaseIndex    :: BuiltinByteString
             ,   threatDatabaseSH :: ScriptHash
+            ,   requestPeriod    :: POSIXTime
             }
         deriving
             (Haskell.Eq, Haskell.Ord, Haskell.Show, Generic, ToJSON)

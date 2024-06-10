@@ -31,11 +31,11 @@ import qualified Prelude                    as Haskell
 --
 -- Note: This data type derives several common type classes for convenience.
 data ThreatDatabaseParams = ThreatDatabaseParams
-    { builtinDatabaseIndex      :: BuiltinByteString
-    , contractsControllerSH     :: ScriptHash
-    , currencySymbolOfCAT       :: CurrencySymbol
-    , currencySymbolOfTDAT      :: CurrencySymbol
-    , threatDatabaseDebuggerPKH :: PubKeyHash
+    {   builtinDatabaseIndex      :: BuiltinByteString
+    ,   contractsControllerSH     :: ScriptHash
+    ,   currencySymbolOfCAT       :: CurrencySymbol
+    ,   currencySymbolOfTDAT      :: CurrencySymbol
+    ,   threatDatabaseDebuggerPKH :: PubKeyHash
     }
     deriving (Haskell.Eq, Haskell.Ord, Haskell.Show, Generic, ToJSON)
 

@@ -236,5 +236,5 @@ tryReadAddress x = case deserialiseAddress AsAddressAny $ pack x of
 
 pkhFromAddress :: String -> PubKeyHash
 pkhFromAddress x = case tryReadAddress x of
-    Nothing   -> error "address reading error"
-    Just addr -> fromJust $ Plutus.toPubKeyHash addr
+    Nothing   ->    error "address reading error"
+    Just addr ->    fromJust $ Plutus.toPubKeyHash addr

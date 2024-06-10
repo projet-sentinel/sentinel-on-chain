@@ -97,7 +97,7 @@ import           Oracle.ThreatDatabase.Types              (ThreatDatabaseAction 
 
     Note:
         - The function uses various helper functions to retrieve data from transaction outputs, calculate values, and perform checks.
-        - Error handling is done using 'traceError' and 'traceIfFalse' functions.
+        - Error handling is done using 'traceError' and "traceIfFalse" functions.
         - The code assumes that certain conditions are met, such as the existence of a single script input and output UTxO.
 -}
 mkValidator :: ThreatDatabaseParams -> ThreatDatabaseAddrListDatum -> ThreatDatabaseAction -> ScriptContext -> Bool
