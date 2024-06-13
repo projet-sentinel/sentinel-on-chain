@@ -1,7 +1,7 @@
 #!/bin/bash
 
 find_and_set_repo_home() {
-    local target_folder="sentinel-on-chain-private"
+    local target_folder="sentinel-on-chain"
 
     local repo_path
     repo_path=$(find /home -type d -name "$target_folder" -not -path '*/\.*' -print -quit 2>/dev/null)

@@ -42,6 +42,8 @@ import           Oracle.TDAT.Types                              as TDAT
 import           Oracle.ThreatDatabase.AddressList.Validator    as ThreatDatabaseAddressList
 import           Oracle.ThreatDatabase.ScriptHashList.Validator as ThreatDatabaseSHList
 import           Oracle.ThreatDatabase.Types                    as ThreatDatabase
+import           Oracle.TDR.Validator                           as TDR
+import           Oracle.TDR.Types                               as TDR
 import           Users.Escrow.Types                             as Escrow
 import           Users.Escrow.Validator                         as Escrow
 
@@ -63,6 +65,9 @@ main = do
                 ["Escrow", file, tdatCs', tdAddr'] -> do
                     printf "file: %s\n" file
                     writeValidator (File file) (Escrow.compiledCode $ EscrowParams (fromString tdatCs') (fromJust $ tryReadAddress tdAddr'))
+                ["TDR", file, tdrIndex', controllerSh', catCs', tdatCs', debaddr'] -> do
+                    printf "file: %s\n" file
+                    writeValidator (File file) (TDR.compiledCode $ TDRParams (fromString tdrIndex') (fromString controllerSh') (fromString catCs') (fromString tdatCs') (pkhFromAddress debaddr'))
                 _ -> error "validator not found"
         "Policy" -> do
             case drop 1 args of
@@ -139,6 +144,18 @@ main = do
                             printf "file: %s\n" file
                             writeJson file ThreatDatabaseDebugger
                         _ -> error "ThreatDatabase redeemer not found"
+                ("TDR":xs) -> do
+                    case xs of
+                        ["AcceptRequest", file] -> do
+                            printf "file: %s\n" file
+                            writeJson file AcceptRequest  
+                        ["RemoveRequest", file] -> do
+                            printf "file: %s\n" file
+                            writeJson file RemoveRequest   
+                        ["TDRDebugger", file] -> do
+                            printf "file: %s\n" file
+                            writeJson file TDRDebugger    
+                        _ -> error "TDR redeemer not found"                                         
                 _ -> error "redeemer not found"
         "Datum" -> do
             case drop 1 args of
@@ -164,6 +181,10 @@ main = do
                                     Just tdrsd <- readJSON @TDATRefScriptDatum tdrsdFile
                                     printf "file: %s\n" file
                                     writeJson file (ContractRefScriptDatum $ toBuiltinData tdrsd)
+                                ["TDR", file, tdrFile] -> do
+                                    Just tdrsd <- readJSON @TDRRefScriptDatum tdrFile
+                                    printf "file: %s\n" file
+                                    writeJson file (ContractRefScriptDatum $ toBuiltinData tdrsd)
                                 _ -> error "ContractRefScriptDatum not found"
                         _ -> error "Controller datum not found"
                 ("ThreatDatabaseAddrListDatum":xs') -> do
@@ -173,6 +194,14 @@ main = do
                         updated = fromMilliSeconds $ DiffMilliSeconds (read (xs'!!3))
                         addrs = map (fromJust . tryReadAddress) (drop 4 xs')
                     writeJson file (ThreatDatabaseAddrListDatum tag score addrs updated)
+                ("ThreatDatabaseAddrListDatumAddAddrs":xs') -> do
+                    let file = head xs'
+                        tag = read (xs'!!1)
+                        score = read (xs'!!2)
+                        updated = fromMilliSeconds $ DiffMilliSeconds (read (xs'!!3))
+                        addrs = map (fromJust . tryReadAddress) (drop 4 xs')
+                    Just (ThreatDatabaseAddrListDatum _ _ oldAddrsL _) <- readJSON @ThreatDatabaseAddrListDatum file 
+                    writeJson file (ThreatDatabaseAddrListDatum tag score (oldAddrsL++addrs) updated)
                 ("ThreatDatabaseRefScriptDatum":xs') -> do
                     let file = head xs'
                         treasuryAddr = fromJust $ tryReadAddress (xs'!!2)
@@ -183,6 +212,12 @@ main = do
                         tdatAddr = fromJust $ tryReadAddress (xs'!!2)
                         adminPkhs = map pkhFromAddress (drop 3 xs')
                     writeJson file (TDATRefScriptDatum (fromString (xs'!!1)) adminPkhs tdatAddr)
+                ["TDRRefScriptDatum", file, tdrIndex', dbIndex', tdScrH', reqPeriod'] -> do
+                    let reqPeriod = fromMilliSeconds $ DiffMilliSeconds (read reqPeriod')
+                    writeJson file (TDRRefScriptDatum (fromString tdrIndex') (fromString dbIndex') (fromString tdScrH') reqPeriod)
+                ["TDRDatum", file, requesterAddr', threatScore', reqDataAddr', reqTime'] -> do
+                    let reqTime = fromMilliSeconds $ DiffMilliSeconds (read reqTime')
+                    writeJson file (TDRDatum (fromJust $ tryReadAddress requesterAddr') (read threatScore') (fromJust $ tryReadAddress reqDataAddr') reqTime)
                 ["Escrow", file, senderaddr', receiveraddr'] -> do
                     writeJson file (EscrowDatum (fromJust $ tryReadAddress senderaddr') (fromJust $ tryReadAddress receiveraddr'))
                 _ -> error "datum not found"

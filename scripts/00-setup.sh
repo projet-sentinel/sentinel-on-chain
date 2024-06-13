@@ -12,7 +12,7 @@ chmod +x 06sh-mint-tdat.sh
 chmod +x 07a-update-threat-score.sh
 chmod +x 07b-remove-threat-score.sh
 chmod +x 08-lock-escrow.sh
-chmod +x 09-inlock-escrow.sh
+chmod +x 09-unlock-escrow.sh
 
 chmod +x balance-wallet.sh
 chmod +x balance-validator.sh

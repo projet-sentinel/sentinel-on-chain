@@ -236,7 +236,7 @@ mkValidator TDRParams{..} datum redeemer ctx@ScriptContext{ scriptContextTxInfo 
 
 {-# INLINABLE mkUntypedValidator #-}
 mkUntypedValidator :: TDRParams -> BuiltinData -> BuiltinData -> BuiltinData -> ()
-mkUntypedValidator params datum redeemer ctx
+mkUntypedValidator params datum redeemer ctx 
     |   mkValidator params (unsafeFromBuiltinData datum) (unsafeFromBuiltinData redeemer) (unsafeFromBuiltinData ctx) = ()
     |   otherwise = error()
 

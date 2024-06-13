@@ -17,9 +17,9 @@ BOARD_MEMBER5="boardmember5"
 DEBUGGER="debugger"
 TREASURY="treasury"
 ORACLE_ADMIN="admin1"
-SENDER="sender"
-RECEIVER="receiver"
-BAD="bad-user"
+REQUESTER="requester"
+BAD1="bad-user1"
+BAD2="bad-user2"
 
 REF_SCR_WALLET="ref-scr-wallet"
 
@@ -34,9 +34,9 @@ printfGreen "Create wallets..."
 ./create-user-stake.sh $REF_SCR_WALLET
 ./create-user-stake.sh $TREASURY
 ./create-user-stake.sh $ORACLE_ADMIN
-./create-user-stake.sh $SENDER
-./create-user-stake.sh $RECEIVER
-./create-user-stake.sh $BAD
+./create-user-stake.sh $REQUESTER
+./create-user-stake.sh $BAD1
+./create-user-stake.sh $BAD2
 
 wait_for_node
 echo $CARDANO_NODE_SOCKET_PATH
@@ -56,8 +56,7 @@ cardano-cli transaction build \
     --tx-out $(cat $WALLET_PATH/$BOARD_MEMBER5.addr)+20000000 \
     --tx-out $(cat $WALLET_PATH/$DEBUGGER.addr)+100000000 \
     --tx-out $(cat $WALLET_PATH/$ORACLE_ADMIN.addr)+100000000 \
-    --tx-out $(cat $WALLET_PATH/$SENDER.addr)+50000000 \
-    --tx-out $(cat $WALLET_PATH/$RECEIVER.addr)+50000000 \
+    --tx-out $(cat $WALLET_PATH/$REQUESTER.addr)+50000000 \
     --out-file $TX_PATH/tx.raw
 
 cardano-cli transaction sign \
@@ -138,15 +137,9 @@ tokens but instead of a treasury address we have the threat database validator a
 
 #pressContinue
 
-##### request data
-printfGreen "request data..."
-./06b-send-request.sh $SENDER 1 $RECEIVER
-
-balanceValidator threatDatabaseRequest1
-
 ##### mint tdat
 printfGreen "mint tdat..."
-./06addr-mint-tdat.sh $ORACLE_ADMIN 1 $BAD 5
+./06addr-mint-tdat.sh $ORACLE_ADMIN 1 $BAD1 5
 
 balanceValidator threatDatabase1
 printfGreen "Now we minted our first threat data utxo, verified by it's currency symbol $(cat $Policy_Path/tdat1.cs) and locked it \n
@@ -157,44 +150,36 @@ third some sample threat data (a list of addresses) and fourth the time it was l
 
 #pressContinue
 
-balanceValidator threatDatabase1
+##### request data
+printfGreen "request data..."
+./06b-send-request.sh $REQUESTER 1 $BAD2
+
+balanceValidator threatDatabaseRequest1
+printfGreen "We sent a request for an address to the threat database request validator."
+cat $DATUM_PATH/tdr-dat1.json | jq
+printfGreen "The request contains, the requester address, a possible threat score (choosen by the requester), the request data (an address) \n
+and the time it was requested."
+
+## reomve request
+printfGreen "remove request..."
+./07c-remove-request.sh $REQUESTER 1
+
+balanceValidator threatDatabaseRequest1
+printfGreen "The requester changed his mind, he does not need a threat score about that address anymore."
+
+##### request data
+printfGreen "request data..."
+./06b-send-request.sh $REQUESTER 1 $BAD2
+
+printfGreen "He does need it again."
+
+#pressContinue
 
 printfGreen "accept request..."
-./07d-update-threat-score-req.sh $ORACLE_ADMIN 1 9 $TREASURY $BAD
+./07d-update-threat-score-req.sh $ORACLE_ADMIN 1 9 $TREASURY $BAD2
+
+printfGreen "The oracle admin updated the threat data datum and unlocked the ada attached to the utxo to the treasury."
 
 balanceValidator threatDatabaseRequest1 
 balanceValidator threatDatabase1
-
-#printfGreen "remove request..."
-#./07c-remove-request.sh $SENDER 1
-
-#balanceValidator threatDatabaseRequest1
-
-./08-lock-escrow.sh $SENDER $RECEIVER 10000000 1
-
-balanceValidator escrow
-
-printfGreen "A client locked 10 Ada in an escrow contract."
-
-#pressContinue
-
-./09-unlock-escrow.sh $RECEIVER 1
-
-balanceUser $RECEIVER
-
-printfGreen "update threat score..."
-./07a-update-threat-score.sh $ORACLE_ADMIN 1 9
-
-balanceValidator threatDatabase1
-cat $DATUM_PATH/threat-database-dat1.json | jq
-printfGreen "In this transaction we updated the threat score."
-
-#pressContinue
-
-printfGreen "remove threat score..."
-./07b-remove-threat-score.sh $ORACLE_ADMIN 1 $TREASURY
-
-balanceValidator threatDatabase1
-cat $DATUM_PATH/threat-database-dat1.json | jq
-printfGreen "In this transaction we removed the threat score and sent the funds locked with the token to the treasury."
 balanceUser $TREASURY

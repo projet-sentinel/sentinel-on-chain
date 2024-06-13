@@ -50,13 +50,19 @@ cabal run write-data Validator ThreatDatabaseAddrList $Validator_Path/threatData
 cardano-cli address build --testnet-magic ${TESTNET_MAGIC} --payment-script-file $Validator_Path/threatDatabase$INDEX.plutus --out-file $Validator_Path/threatDatabase$INDEX.addr
 cardano-cli transaction policyid --script-file $Validator_Path/threatDatabase$INDEX.plutus > $Validator_Path/threatDatabase$INDEX.vh
 
+cabal run write-data Validator TDR $Validator_Path/threatDatabaseRequest$INDEX.plutus $INDEX $(cat $CONTROLLER_VH) $(cat $CAT_CS) $(cat $Policy_Path/tdat$INDEX.cs) $(cat $WALLET_PATH/$DEB.addr)
+cardano-cli address build --testnet-magic ${TESTNET_MAGIC} --payment-script-file $Validator_Path/threatDatabaseRequest$INDEX.plutus --out-file $Validator_Path/threatDatabaseRequest$INDEX.addr
+cardano-cli transaction policyid --script-file $Validator_Path/threatDatabaseRequest$INDEX.plutus > $Validator_Path/threatDatabaseRequest$INDEX.vh
+
 cabal run write-data Redeemer CAT SentinelBoardAction $REDEEMER_PATH/sentinelBoardAction-red.json
 
 cabal run write-data Datum ThreatDatabaseRefScriptDatum $DATUM_PATH/threat-database-ref-dat-$INDEX.json $INDEX $(cat $WALLET_PATH/$TREASURY_NAME.addr) $(cat $WALLET_PATH/$ADMIN_NAME.addr)
 cabal run write-data Datum TDATRefScriptDatum $DATUM_PATH/tdat-ref-dat-$INDEX.json $INDEX $(cat $Validator_Path/threatDatabase$INDEX.addr) $(cat $WALLET_PATH/$ADMIN_NAME.addr)
+cabal run write-data Datum TDRRefScriptDatum $DATUM_PATH/tdr-ref-dat$INDEX.json $INDEX $INDEX $(cat $Validator_Path/threatDatabase$INDEX.vh) 1
 
 cabal run write-data Datum Controller ContractRefScriptDatum ThreatDatabase $DATUM_PATH/td-ref-script-dat$INDEX.json $DATUM_PATH/threat-database-ref-dat-$INDEX.json
 cabal run write-data Datum Controller ContractRefScriptDatum TDAT $DATUM_PATH/tdat-ref-script-dat$INDEX.json $DATUM_PATH/tdat-ref-dat-$INDEX.json
+cabal run write-data Datum Controller ContractRefScriptDatum TDR $DATUM_PATH/tdr-ref-script-dat$INDEX.json $DATUM_PATH/tdr-ref-dat$INDEX.json
 
 cardano-cli transaction build \
     --babbage-era \
@@ -69,7 +75,7 @@ cardano-cli transaction build \
     --read-only-tx-in-reference $UTXO_BMAT3 \
     --read-only-tx-in-reference $UTXO_BMAT4 \
     --read-only-tx-in-reference $UTXO_BMAT5 \
-    --mint "1 $(cat $CAT_CS).$(cat $Validator_Path/threatDatabase$INDEX.vh) + 1 $(cat $CAT_CS).$(cat $Policy_Path/tdat$INDEX.cs)" \
+    --mint "1 $(cat $CAT_CS).$(cat $Validator_Path/threatDatabase$INDEX.vh) + 1 $(cat $CAT_CS).$(cat $Policy_Path/tdat$INDEX.cs) + 1 $(cat $CAT_CS).$(cat $Validator_Path/threatDatabaseRequest$INDEX.vh)" \
     --mint-tx-in-reference $UTXO_IN_REF_SCR \
     --mint-plutus-script-v2 \
     --mint-reference-tx-in-redeemer-file $REDEEMER_PATH/sentinelBoardAction-red.json \
@@ -83,9 +89,12 @@ cardano-cli transaction build \
     --tx-out $(cat $CONTROLLER_ADDR)+18597650+"1 $(cat $CAT_CS).$(cat $Validator_Path/threatDatabase$INDEX.vh)" \
     --tx-out-inline-datum-file $DATUM_PATH/td-ref-script-dat$INDEX.json \
     --tx-out-reference-script-file $Validator_Path/threatDatabase$INDEX.plutus \
-    --tx-out $(cat $CONTROLLER_ADDR)+18597650+"1 $(cat $CAT_CS).$(cat $Policy_Path/tdat$INDEX.cs)" \
+    --tx-out $(cat $CONTROLLER_ADDR)+18106310+"1 $(cat $CAT_CS).$(cat $Policy_Path/tdat$INDEX.cs)" \
     --tx-out-inline-datum-file $DATUM_PATH/tdat-ref-script-dat$INDEX.json \
     --tx-out-reference-script-file $Policy_Path/tdat$INDEX.plutus \
+    --tx-out $(cat $CONTROLLER_ADDR)+19416550+"1 $(cat $CAT_CS).$(cat $Validator_Path/threatDatabaseRequest$INDEX.vh)" \
+    --tx-out-inline-datum-file $DATUM_PATH/tdr-ref-script-dat$INDEX.json \
+    --tx-out-reference-script-file $Validator_Path/threatDatabaseRequest$INDEX.plutus \
     --change-address $(cat $WALLET_PATH/$USER.addr) \
     --out-file $raw
 
