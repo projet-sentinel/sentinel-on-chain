@@ -77,6 +77,14 @@ Threat data provides a list of addresses.
         - `$3` = name of malicious wallet in `$WALLET_PATH`
         - `$4` = threat score
 
+- 06b-send-request.sh
+    - request threat score for an address
+    - lock ada at `ThreatDatabaseRequest` (TDR) validator with datum `TDRDatum`
+    - #### arguments
+        - `$1` = name of requester wallet name in `$WALLET_PATH`
+        - `$2` = threat database index where address should be added
+        - `$3` = requested wallet name in `$WALLET_PATH`
+
 - 07a-update-threat-score.sh
     - update threat database address list
     - oracle admin has to sign
@@ -93,6 +101,25 @@ Threat data provides a list of addresses.
         - `$1` = name of oracle admin wallet in `$WALLET_PATH`
         - `$2` = threat database index
         - `$3` = name of treasury wallet in `$WALLET_PATH`
+
+- 07c-remove-request.sh
+    - remove request from `ThreatDatabaseRequest` validator
+    - requester has to sign
+    - ada back to requester
+    - #### arguments
+        - `$1` = name of requester wallet name in `$WALLET_PATH`
+        - `$2` = threat database index
+
+- 07d-update-threat-score-req.sh
+    - unlock ada from `ThreatDatabaseRequest` validator
+    - update threat database address list with address in datum `TDRDatum`
+    - oracle admin has to sign
+    - #### arguments
+        - `$1` = name of oracle admin wallet in `$WALLET_PATH`
+        - `$2` = threat database index
+        - `$3` = new threat score
+        - `$4` = name of treasury wallet in `$WALLET_PATH`
+        - `$5` = requested wallet name in `$WALLET_PATH`
 
 - 08-lock-escrow.sh
     - lock ada at escrow contract
@@ -137,3 +164,30 @@ Threat data provides a list of script hashes.
         - `$2` = threat database index
         - `$3` = name of malicious wallet in `$WALLET_PATH`
         - `$4` = threat score
+
+## utility scripts
+
+- balance-validator-detailed.sh 
+    - validator utxos with datum in json format
+    - #### arguments
+        - `$1` = name of validator in `$Validator_Path`
+
+- balance-validator.sh 
+    - simple validaotr utxos 
+    - #### arguments
+        - `$1` = name of validator in `$Validator_Path`
+
+- balance-wallet.sh 
+    - simple wallet utxos 
+    - #### arguments
+        - `$1` = name of wallet in `$WALLET_PATH`
+
+- create-user-stake.sh 
+    - creates wallet in `$WALLET_PATH` with staking part
+    - #### arguments
+        - `$1` = name of new wallet
+        
+- write-env.sh
+    - creates `config.json` file 
+    - #### arguments 
+        - if `$1` then preprod else private testnet config

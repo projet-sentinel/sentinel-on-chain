@@ -9,23 +9,29 @@ chmod +x 05addr-create-oracle-ref.sh
 chmod +x 05sh-create-oracle-ref.sh
 chmod +x 06addr-mint-tdat.sh
 chmod +x 06sh-mint-tdat.sh
+chmod +x 06b-send-request.sh
 chmod +x 07a-update-threat-score.sh
 chmod +x 07b-remove-threat-score.sh
+chmod +x 07c-remove-request.sh 
+chmod +x 07d-update-threat-score-req.sh
 chmod +x 08-lock-escrow.sh
 chmod +x 09-unlock-escrow.sh
 
 chmod +x balance-wallet.sh
+chmod +x balance-validator-detailed.sh
 chmod +x balance-validator.sh
 chmod +x create-user-stake.sh
-chmod +x fund-user.sh
+
 chmod +x write-env.sh
 
 cd ..
 cd run-examples
 
 chmod +x multiple-dbs.sh
+chmod +x multiple-tags.sh
 chmod +x run-full-trace.sh
 chmod +x threat-data-reader.sh
+chmod +x threat-data-request.sh
 chmod +x wrong-admin.sh
 chmod +x wrong-treasury.sh
 
