@@ -1,6 +1,6 @@
 -- Custom repository for cardano haskell packages, see CONTRIBUTING.md
 repository cardano-haskell-packages
-  url: https://input-output-hk.github.io/cardano-haskell-packages
+  url: https://intersectmbo.github.io/cardano-haskell-packages
   secure: True
   root-keys:
     3e0cce471cf09815f930210f7827266fd09045445d65923e6d0238a6cd15126f
@@ -12,18 +12,14 @@ repository cardano-haskell-packages
 
 -- See CONTRIBUTING.md for information about when and how to update these.
 index-state:
-  , hackage.haskell.org 2024-02-07T15:07:04Z
-  , cardano-haskell-packages 2024-02-07T19:04:02Z
+  , hackage.haskell.org 2025-01-15T13:32:16Z
+  , cardano-haskell-packages 2025-01-15T09:59:24Z
 
 packages: sentinel-contracts
 
 -- Compile more things in parallel
 package *
   ghc-options: -j8
-
--- Warnings as errors for local packages
---program-options
---  ghc-options: -Werror
 
 -- Always build tests and benchmarks of local packages
 tests: True
@@ -32,6 +28,5 @@ benchmarks: True
 -- Always show detailed output for tests
 test-show-details: direct
 
--- Fix compilation of strict-containers (see also nix/hydra/project.nix)
-package strict-containers
-  ghc-options: "-Wno-noncanonical-monad-instances"
+program-options
+  ghc-options: -fwrite-ide-info

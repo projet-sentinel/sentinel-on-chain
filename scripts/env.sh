@@ -63,16 +63,6 @@ run_node(){
     sleep 5
 }
 
-wait_tx_submitted(){
-    old_blocks=$(cardano-cli query tip --testnet-magic ${TESTNET_MAGIC} | jq '.block')
-    new_blocks=$(cardano-cli query tip --testnet-magic ${TESTNET_MAGIC} | jq '.block')
-
-    while [[ "$old_blocks" == "$new_blocks" ]]
-    do
-        new_blocks=$(cardano-cli query tip --testnet-magic ${TESTNET_MAGIC} | jq '.block')
-    done
-}
-
 open_terminal_and_run_commands() {
     local commands_to_run="$@"
     gnome-terminal -- bash -c "$commands_to_run; exec bash"
@@ -133,33 +123,6 @@ get_UTxO_lovelace_amount() {
     return 1
 }
 
-
-get_UTxO_lovelace_amount() {
-    local ADDRESS="$1"
-    local UTxO="$2"
-
-    local utxo_info
-    utxo_info=$(cardano-cli query utxo --address "$ADDRESS" --testnet-magic ${TESTNET_MAGIC} | tail -n +3)
-
-    local utxo_entries
-    IFS=$'\n' read -r -d '' -a utxo_entries <<<"$utxo_info"
-
-    for i in {1..10}; do
-        for entry in "${utxo_entries[@]}"; do
-            entry_parts=($entry)
-            utxo_hash=${entry_parts[0]}
-            utxo_id=${entry_parts[1]}
-
-            if [[ "$utxo_hash#$utxo_id" == "$UTxO" ]]; then
-                echo "${entry_parts[2]}"
-                return 0
-            fi
-        done
-    done
-
-    return 1
-}
-
 get_current_slot_number() {
     cardano-cli query tip --testnet-magic ${TESTNET_MAGIC} |
         awk -v i="6" 'NR == i {printf("%s", $2)}' |
@@ -174,7 +137,7 @@ get_current_POSIX_time() {
 # $1 = tx file path
 # $2 = address first output
 tx_submitted(){
-    tx_Id=$(cardano-cli transaction txid --tx-file $1)
+    tx_Id=$(cardano-cli conway transaction txid --tx-file $1)
     cardano-cli query utxo --testnet-magic ${TESTNET_MAGIC} --address $2 --out-file tmp.utxos
     presence=$(jq -r ".[\"$tx_id#0\"]" "tmp.utxos")
 

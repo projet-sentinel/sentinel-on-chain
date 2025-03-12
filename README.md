@@ -1,9 +1,9 @@
 ## Prerequisits 
 
-- [cardano-node](https://github.com/IntersectMBO/cardano-node) version 8.9.0
+- [cardano-node](https://github.com/IntersectMBO/cardano-node) version 10.1.3
 - [nix](https://nixos.org/download/#download-nix)
 - [hydra](https://github.com/input-output-hk/hydra)
-    - `git checkout 0.16.0`
+    - `git checkout 0.20.0`
     - `nix develop`
 - `REPO_HOME` in `/scripts/env.sh` should point to this repository
 - `cd scripts`
@@ -173,7 +173,7 @@ Threat data provides a list of script hashes.
         - `$1` = name of validator in `$Validator_Path`
 
 - balance-validator.sh 
-    - simple validaotr utxos 
+    - simple validator utxos 
     - #### arguments
         - `$1` = name of validator in `$Validator_Path`
 

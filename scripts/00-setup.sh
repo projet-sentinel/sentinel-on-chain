@@ -38,4 +38,4 @@ chmod +x wrong-treasury.sh
 git clone https://gitlab.com/gimbalabs/andamio/cardano-private-testnet-setup
 
 cd cardano-private-testnet-setup
-git checkout cardano-node8.9.0
+git checkout cardano-node10.1.3

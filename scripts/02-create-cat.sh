@@ -14,16 +14,15 @@ cur_slot=$(cardano-cli query tip --testnet-magic ${TESTNET_MAGIC} | jq '.slot')
 currentTime=$(($(date +%s) * 1000))
 
 cabal run write-data Policy CAT $CAT_Policy $(("$currentTime" + 3600000)) $DEB_ADDR
-cardano-cli transaction policyid --script-file $CAT_Policy > $CAT_CS
+cardano-cli conway transaction policyid --script-file $CAT_Policy > $CAT_CS
 
 cabal run write-data Validator Controller $CONTROLLER $(cat $CAT_CS) $DEB_ADDR
 cardano-cli address build --testnet-magic ${TESTNET_MAGIC} --payment-script-file $CONTROLLER --out-file $CONTROLLER_ADDR
-cardano-cli transaction policyid --script-file $CONTROLLER > $CONTROLLER_VH
+cardano-cli conway transaction policyid --script-file $CONTROLLER > $CONTROLLER_VH
 
 UTXO_IN=$(get_address_biggest_lovelace $(cat $WALLET_PATH/$USER.addr))
 
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in $UTXO_IN \
     --tx-in-collateral $UTXO_IN \
@@ -32,13 +31,13 @@ cardano-cli transaction build \
     --change-address $DEB_ADDR \
     --out-file $raw 
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-body-file $raw \
     --signing-key-file $WALLET_PATH/$USER.skey \
     --out-file $signed 
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $signed 
 

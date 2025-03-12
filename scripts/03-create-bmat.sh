@@ -24,14 +24,13 @@ txHash=${strarr[0]}
 txId=${strarr[1]}
 
 cabal run write-data Policy BMAT $BMAT_Policy $txHash $txId $(cat $WALLET_PATH/$USER.addr)
-cardano-cli transaction policyid --script-file $BMAT_Policy > $BMAT_CS
+cardano-cli conway transaction policyid --script-file $BMAT_Policy > $BMAT_CS
 
 cabal run write-data Redeemer Unit $REDEEMER_PATH/unit.json
 
 cabal run write-data Datum Controller BoardMemberDatum $B_MEM_DAT $(cat $WALLET_PATH/$USER.addr)
 
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in $txHash#$txId \
     --tx-in-collateral $txHash#$txId \
@@ -44,13 +43,13 @@ cardano-cli transaction build \
     --required-signer-hash $USER_PKH \
     --out-file $raw 
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-body-file $raw \
     --out-file $signed \
     --signing-key-file $WALLET_PATH/$USER.skey
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $signed
 

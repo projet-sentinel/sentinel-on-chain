@@ -44,15 +44,15 @@ nowSlotNumber=$(get_current_slot_number)
 submissionTime=$((nowSlotNumber + 150))
 
 cabal run write-data Policy TDATAddrList $Policy_Path/tdat$INDEX.plutus $INDEX $(cat $CONTROLLER_VH) $(cat $CAT_CS) $(cat $WALLET_PATH/$DEB.addr)
-cardano-cli transaction policyid --script-file $Policy_Path/tdat$INDEX.plutus > $Policy_Path/tdat$INDEX.cs
+cardano-cli conway transaction policyid --script-file $Policy_Path/tdat$INDEX.plutus > $Policy_Path/tdat$INDEX.cs
 
 cabal run write-data Validator ThreatDatabaseAddrList $Validator_Path/threatDatabase$INDEX.plutus $INDEX $(cat $CONTROLLER_VH) $(cat $CAT_CS) $(cat $Policy_Path/tdat$INDEX.cs) $(cat $WALLET_PATH/$DEB.addr)
 cardano-cli address build --testnet-magic ${TESTNET_MAGIC} --payment-script-file $Validator_Path/threatDatabase$INDEX.plutus --out-file $Validator_Path/threatDatabase$INDEX.addr
-cardano-cli transaction policyid --script-file $Validator_Path/threatDatabase$INDEX.plutus > $Validator_Path/threatDatabase$INDEX.vh
+cardano-cli conway transaction policyid --script-file $Validator_Path/threatDatabase$INDEX.plutus > $Validator_Path/threatDatabase$INDEX.vh
 
 cabal run write-data Validator TDR $Validator_Path/threatDatabaseRequest$INDEX.plutus $INDEX $(cat $CONTROLLER_VH) $(cat $CAT_CS) $(cat $Policy_Path/tdat$INDEX.cs) $(cat $WALLET_PATH/$DEB.addr)
 cardano-cli address build --testnet-magic ${TESTNET_MAGIC} --payment-script-file $Validator_Path/threatDatabaseRequest$INDEX.plutus --out-file $Validator_Path/threatDatabaseRequest$INDEX.addr
-cardano-cli transaction policyid --script-file $Validator_Path/threatDatabaseRequest$INDEX.plutus > $Validator_Path/threatDatabaseRequest$INDEX.vh
+cardano-cli conway transaction policyid --script-file $Validator_Path/threatDatabaseRequest$INDEX.plutus > $Validator_Path/threatDatabaseRequest$INDEX.vh
 
 cabal run write-data Redeemer CAT SentinelBoardAction $REDEEMER_PATH/sentinelBoardAction-red.json
 
@@ -64,8 +64,7 @@ cabal run write-data Datum Controller ContractRefScriptDatum ThreatDatabase $DAT
 cabal run write-data Datum Controller ContractRefScriptDatum TDAT $DATUM_PATH/tdat-ref-script-dat$INDEX.json $DATUM_PATH/tdat-ref-dat-$INDEX.json
 cabal run write-data Datum Controller ContractRefScriptDatum TDR $DATUM_PATH/tdr-ref-script-dat$INDEX.json $DATUM_PATH/tdr-ref-dat$INDEX.json
 
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in $UTXO_IN \
     --tx-in-collateral $UTXO_IN \
@@ -98,7 +97,7 @@ cardano-cli transaction build \
     --change-address $(cat $WALLET_PATH/$USER.addr) \
     --out-file $raw
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-body-file $raw \
     --out-file $signed \
@@ -109,7 +108,7 @@ cardano-cli transaction sign \
     --signing-key-file $WALLET_PATH/boardmember4.skey \
     --signing-key-file $WALLET_PATH/boardmember5.skey \
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $signed
 

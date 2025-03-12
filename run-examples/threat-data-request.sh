@@ -45,7 +45,7 @@ UTXO_IN=$(get_address_biggest_lovelace $(cat ../cardano-private-testnet-setup/pr
 
 ##### fund wallets
 printfGreen "Fund wallets..."
-cardano-cli transaction build \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in ${UTXO_IN} \
     --change-address $(cat ../cardano-private-testnet-setup/private-testnet/addresses/utxo1.addr) \
@@ -59,13 +59,13 @@ cardano-cli transaction build \
     --tx-out $(cat $WALLET_PATH/$REQUESTER.addr)+50000000 \
     --out-file $TX_PATH/tx.raw
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --tx-body-file $TX_PATH/tx.raw \
     --signing-key-file ../cardano-private-testnet-setup/private-testnet/utxo-keys/utxo1.skey \
     --testnet-magic ${TESTNET_MAGIC} \
     --out-file $TX_PATH/tx.signed
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $TX_PATH/tx.signed
 

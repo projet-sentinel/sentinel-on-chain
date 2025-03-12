@@ -18,11 +18,11 @@ BMAT_CS3="$Policy_Path/bmat-3.cs"
 BMAT_CS4="$Policy_Path/bmat-4.cs"
 BMAT_CS5="$Policy_Path/bmat-5.cs"
 
-UTXO_BMAT1=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS1)")
-UTXO_BMAT2=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS2)")
-UTXO_BMAT3=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS3)")
-UTXO_BMAT4=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS4)")
-UTXO_BMAT5=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS5)")
+UTXO_BMAT1=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS1)" "")
+UTXO_BMAT2=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS2)" "")
+UTXO_BMAT3=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS3)" "")
+UTXO_BMAT4=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS4)" "")
+UTXO_BMAT5=$(get_UTxO_by_token $(cat $CONTROLLER_ADDR) "$(cat $BMAT_CS5)" "")
 
 BMAT_PKH1=$(cardano-cli address key-hash --payment-verification-key-file $WALLET_PATH/boardmember1.vkey)
 BMAT_PKH2=$(cardano-cli address key-hash --payment-verification-key-file $WALLET_PATH/boardmember2.vkey)
@@ -39,8 +39,7 @@ cabal run write-data Redeemer CAT SentinelBoardInception $REDEEMER_PATH/sentinel
 
 cabal run write-data Datum Controller ContractsControllerRefScriptDatum $DATUM_PATH/contracts-controller-ref-script-dat.json $(($(get_current_POSIX_time) + 31539600000)) $(cat $BMAT_CS1) $(cat $BMAT_CS2) $(cat $BMAT_CS3) $(cat $BMAT_CS4) $(cat $BMAT_CS5)
 
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in $UTXO_IN \
     --tx-in-collateral $UTXO_IN \
@@ -66,7 +65,7 @@ cardano-cli transaction build \
     --change-address $(cat $WALLET_PATH/$USER.addr) \
     --out-file $raw
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-body-file $raw \
     --out-file $signed \
@@ -77,7 +76,7 @@ cardano-cli transaction sign \
     --signing-key-file $WALLET_PATH/boardmember4.skey \
     --signing-key-file $WALLET_PATH/boardmember5.skey \
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $signed
 

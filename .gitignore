@@ -6,3 +6,4 @@ dist-newstyle
 .editorconfig
 private/
 private
+cardano-private-testnet-setup/

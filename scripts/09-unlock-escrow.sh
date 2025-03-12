@@ -20,8 +20,7 @@ THREAT_TOKEN_REF_UTXO=$(get_UTxO_by_token $(cat $Validator_Path/threatDatabase$D
 
 cabal run write-data Redeemer Unit $REDEEMER_PATH/unit.json
 
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in $UTXO_IN \
     --tx-in-collateral $UTXO_IN \
@@ -35,13 +34,13 @@ cardano-cli transaction build \
     --required-signer-hash $USER_PKH \
     --out-file $raw
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-body-file $raw \
     --out-file $signed \
     --signing-key-file $WALLET_PATH/$USER.skey 
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $signed
 

@@ -36,8 +36,7 @@ cabal run write-data Datum ThreatDatabaseAddrListDatum $DATUM_PATH/threat-databa
 
 sleep 2
 
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in $UTXO_IN \
     --tx-in-collateral $UTXO_IN \
@@ -53,13 +52,13 @@ cardano-cli transaction build \
     --required-signer-hash $USER_PKH \
     --out-file $raw 
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-body-file $raw \
     --out-file $signed \
     --signing-key-file $WALLET_PATH/$USER.skey
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $signed
 

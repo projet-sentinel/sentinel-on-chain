@@ -45,7 +45,7 @@ UTXO_IN=$(get_address_biggest_lovelace $(cat ../cardano-private-testnet-setup/pr
 
 ##### fund wallets
 printfGreen "Fund wallets..."
-cardano-cli transaction build \
+cardano-cli conway transaction build \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-in ${UTXO_IN} \
     --change-address $(cat ../cardano-private-testnet-setup/private-testnet/addresses/utxo1.addr) \
@@ -60,13 +60,13 @@ cardano-cli transaction build \
     --tx-out $(cat $WALLET_PATH/$RECEIVER.addr)+50000000 \
     --out-file $TX_PATH/tx.raw
 
-cardano-cli transaction sign \
+cardano-cli conway transaction sign \
     --tx-body-file $TX_PATH/tx.raw \
     --signing-key-file ../cardano-private-testnet-setup/private-testnet/utxo-keys/utxo1.skey \
     --testnet-magic ${TESTNET_MAGIC} \
     --out-file $TX_PATH/tx.signed
 
-cardano-cli transaction submit \
+cardano-cli conway transaction submit \
     --testnet-magic ${TESTNET_MAGIC} \
     --tx-file $TX_PATH/tx.signed
 
@@ -95,7 +95,7 @@ printfGreen "We created a reference script utxo which references the controller 
 
 ##### mint board member auth tokens
 printfGreen "create bmats..."
-./03-create-bmat.sh $BOARD_MEMBER1 & 
+./03-create-bmat.sh $BOARD_MEMBER1 &
 ./03-create-bmat.sh $BOARD_MEMBER2 &
 ./03-create-bmat.sh $BOARD_MEMBER3 &
 ./03-create-bmat.sh $BOARD_MEMBER4 &
