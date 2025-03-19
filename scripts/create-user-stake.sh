@@ -15,7 +15,7 @@ cardano-cli conway stake-address key-gen \
 cardano-cli conway stake-address build \
     --testnet-magic ${TESTNET_MAGIC} \
     --stake-verification-key-file $WALLET_PATH/$USER-stake.vkey \
-    --out-file $WALLET_PATH/$1-stake.addr
+    --out-file $WALLET_PATH/$USER-stake.addr
 
 cardano-cli conway address build \
     --payment-verification-key-file $WALLET_PATH/$USER.vkey \
